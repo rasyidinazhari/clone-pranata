@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Cell,
+  LineChart, Line, Legend,
 } from "recharts";
 import { Droplets, Thermometer, Wind, CloudRain, MapPin, RefreshCw, AlertCircle, CheckCircle2 } from "lucide-react";
 import {
@@ -159,6 +160,41 @@ function DashboardPage() {
           </div>
         </div>
       )}
+
+      {/* 24h Line Chart */}
+      {weather?.source === "bmkg" && weather.forecast.length > 0 && (() => {
+        const points = weather.forecast.slice(0, 8).map((p) => {
+          const d = new Date(p.datetime);
+          const hh = String(d.getHours()).padStart(2, "0");
+          return {
+            time: `${hh}:00`,
+            rainfall: p.rainfall,
+            temperature: p.temperature,
+          };
+        });
+        return (
+          <div className="mt-8 rounded-2xl bg-card border border-border shadow-soft p-6">
+            <h2 className="font-display text-xl font-bold text-primary">Tren 24 Jam — Hujan & Suhu</h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Prakiraan BMKG per 3 jam untuk {weather.city}.
+            </p>
+            <div className="h-72 mt-6">
+              <ResponsiveContainer>
+                <LineChart data={points} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+                  <XAxis dataKey="time" tick={{ fontSize: 12, fill: "var(--color-muted-foreground)" }} />
+                  <YAxis yAxisId="left" tick={{ fontSize: 12, fill: "var(--color-muted-foreground)" }} />
+                  <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12, fill: "var(--color-muted-foreground)" }} />
+                  <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 12, fontSize: 13 }} />
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                  <Line yAxisId="left" type="monotone" dataKey="rainfall" name="Hujan (mm)" stroke="var(--sky)" strokeWidth={2.5} dot={{ r: 3 }} />
+                  <Line yAxisId="right" type="monotone" dataKey="temperature" name="Suhu (°C)" stroke="var(--alert)" strokeWidth={2.5} dot={{ r: 3 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Compare */}
       <div className="mt-8 rounded-2xl bg-card border border-border shadow-soft p-6">
