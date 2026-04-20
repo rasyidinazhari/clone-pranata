@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
 import { ArrowRight, MapPin, Sparkles } from "lucide-react";
-import { getCurrentMongso, PROVINCES } from "@/lib/mongso";
+import { getCurrentMongso } from "@/lib/mongso";
+import { CITIES, findCity } from "@/lib/cities";
+import { useCityId } from "@/lib/cityStore";
 import { MongsoCard } from "@/components/MongsoCard";
 
 export const Route = createFileRoute("/")({
@@ -17,7 +18,8 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const [location, setLocation] = useState("DI Yogyakarta");
+  const [cityId, setCityId] = useCityId();
+  const city = findCity(cityId);
   const mongso = getCurrentMongso();
 
   return (
@@ -59,19 +61,20 @@ function HomePage() {
               <MapPin className="w-4 h-4" />
               <h3 className="font-semibold">Lokasi Anda</h3>
             </div>
-            <p className="text-sm text-muted-foreground mt-1">Pilih lokasi untuk validasi cuaca lokal.</p>
+            <p className="text-sm text-muted-foreground mt-1">Pilih kota untuk data cuaca BMKG real-time.</p>
             <select
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              value={cityId}
+              onChange={(e) => setCityId(e.target.value)}
               className="mt-4 w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             >
-              {PROVINCES.map((p) => <option key={p}>{p}</option>)}
+              {CITIES.map((c) => <option key={c.id} value={c.id}>{c.name} — {c.province}</option>)}
             </select>
             <div className="mt-4 p-4 rounded-xl bg-secondary text-sm">
               <div className="text-muted-foreground text-xs">Lokasi terpilih</div>
-              <div className="font-semibold text-primary mt-0.5">{location}</div>
+              <div className="font-semibold text-primary mt-0.5">{city.name}</div>
+              <div className="text-xs text-muted-foreground">{city.province}</div>
             </div>
-            <Link to="/dashboard" className="mt-auto pt-4 text-sm font-medium text-sky inline-flex items-center gap-1 hover:gap-2 transition-all" style={{ color: "var(--sky)" }}>
+            <Link to="/dashboard" className="mt-auto pt-4 text-sm font-medium inline-flex items-center gap-1 hover:gap-2 transition-all" style={{ color: "var(--sky)" }}>
               Validasi data cuaca <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
