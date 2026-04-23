@@ -1,95 +1,138 @@
+export type WeatherProfile = {
+  rainfall: number; // mm/period
+  temperature: number; // °C avg
+  humidity: number; // %
+  wind: number; // km/jam
+};
+
+export type IdealMongso = {
+  ch: number;
+  suhu: number;
+  lembab: number;
+  angin: number;
+};
+
+export type ToleransiMongso = {
+  ch: number;
+  suhu: number;
+  lembab: number;
+  angin: number;
+};
+
 export type Mongso = {
   number: number;
+  id: number;
   name: string;
+  nama: string;
   period: string;
-  startMonth: number; // 1-12
+  periode: string;
+  startMonth: number;
   startDay: number;
   endMonth: number;
   endDay: number;
   days: number;
+  durasi: number;
   characteristics: string;
+  karakteristik: string;
   season: "Kemarau" | "Pancaroba" | "Hujan";
   emoji: string;
+  ideal: IdealMongso;
+  toleransi: ToleransiMongso;
+  tanaman: { rekomen: string[]; hindari: string[] };
+  kimiaTanah: { ph: string; catatan: string };
 };
 
+const seasonFor = (id: number): Mongso["season"] => {
+  if ([1, 2, 3, 11, 12].includes(id)) return "Kemarau";
+  if ([6, 7, 8].includes(id)) return "Hujan";
+  return "Pancaroba";
+};
+
+const emojiFor = (id: number) => ["", "🍂", "🌵", "🌾", "🌦️", "🌧️", "🌧️", "⛈️", "🦋", "🌬️", "🍉", "🐦", "☀️"][id] ?? "🌱";
+
+const toMongso = (m: Omit<Mongso, "number" | "nama" | "period" | "days" | "characteristics" | "season" | "emoji"> & { name: string; periode: string; durasi: number; karakteristik: string }): Mongso => ({
+  ...m,
+  number: m.id,
+  nama: m.name,
+  period: m.periode,
+  days: m.durasi,
+  characteristics: m.karakteristik,
+  season: seasonFor(m.id),
+  emoji: emojiFor(m.id),
+});
+
 export const MONGSO_LIST: Mongso[] = [
-  { number: 1, name: "Kasa", period: "22 Juni – 1 Agustus", startMonth: 6, startDay: 22, endMonth: 8, endDay: 1, days: 41, characteristics: "Awal kemarau, daun berguguran, tanah mulai mengering.", season: "Kemarau", emoji: "🍂" },
-  { number: 2, name: "Karo", period: "2 Agustus – 24 Agustus", startMonth: 8, startDay: 2, endMonth: 8, endDay: 24, days: 23, characteristics: "Tanah retak-retak, pohon randu & mangga berbuah.", season: "Kemarau", emoji: "🌵" },
-  { number: 3, name: "Katelu", period: "25 Agustus – 17 September", startMonth: 8, startDay: 25, endMonth: 9, endDay: 17, days: 24, characteristics: "Puncak kemarau, umbi-umbian tumbuh, panen palawija.", season: "Kemarau", emoji: "🌾" },
-  { number: 4, name: "Kapat", period: "18 September – 12 Oktober", startMonth: 9, startDay: 18, endMonth: 10, endDay: 12, days: 25, characteristics: "Hujan pertama mulai turun, sumur mulai berair.", season: "Pancaroba", emoji: "🌦️" },
-  { number: 5, name: "Kalima", period: "13 Oktober – 8 November", startMonth: 10, startDay: 13, endMonth: 11, endDay: 8, days: 27, characteristics: "Hujan meningkat, angin kencang, pelangi muncul.", season: "Pancaroba", emoji: "🌈" },
-  { number: 6, name: "Kanem", period: "9 November – 21 Desember", startMonth: 11, startDay: 9, endMonth: 12, endDay: 21, days: 43, characteristics: "Musim buah-buahan, hujan deras, banyak hama.", season: "Hujan", emoji: "🌧️" },
-  { number: 7, name: "Kapitu", period: "22 Desember – 3 Februari", startMonth: 12, startDay: 22, endMonth: 2, endDay: 3, days: 43, characteristics: "Puncak musim hujan, banjir, sungai meluap.", season: "Hujan", emoji: "⛈️" },
-  { number: 8, name: "Kawolu", period: "4 Februari – 1 Maret", startMonth: 2, startDay: 4, endMonth: 3, endDay: 1, days: 26, characteristics: "Hujan mulai mereda, padi mulai berisi, kucing kawin.", season: "Hujan", emoji: "🌾" },
-  { number: 9, name: "Kasanga", period: "2 Maret – 26 Maret", startMonth: 3, startDay: 2, endMonth: 3, endDay: 26, days: 25, characteristics: "Padi menguning, jangkrik bersuara, garengpung muncul.", season: "Pancaroba", emoji: "🦗" },
-  { number: 10, name: "Kasepuluh", period: "27 Maret – 19 April", startMonth: 3, startDay: 27, endMonth: 4, endDay: 19, days: 24, characteristics: "Musim panen padi, burung bersarang.", season: "Pancaroba", emoji: "🌾" },
-  { number: 11, name: "Desta", period: "20 April – 12 Mei", startMonth: 4, startDay: 20, endMonth: 5, endDay: 12, days: 23, characteristics: "Awal kemarau, burung memberi makan anak.", season: "Kemarau", emoji: "🐦" },
-  { number: 12, name: "Sada", period: "13 Mei – 21 Juni", startMonth: 5, startDay: 13, endMonth: 6, endDay: 21, days: 41, characteristics: "Udara dingin di malam hari, kemarau menjelang.", season: "Kemarau", emoji: "❄️" },
+  toMongso({ id: 1, name: "Kasa", periode: "22 Jun – 1 Agt", startMonth: 6, startDay: 22, endMonth: 8, endDay: 1, durasi: 41, ideal: { ch: 20, suhu: 32, lembab: 60, angin: 25 }, toleransi: { ch: 30, suhu: 3, lembab: 10, angin: 10 }, karakteristik: "Puncak kemarau, daun gugur, tanah kering", tanaman: { rekomen: ["Singkong", "Tembakau", "Tebu", "Jati"], hindari: ["Padi sawah", "Kangkung", "Bayam"] }, kimiaTanah: { ph: "5.5–6.0", catatan: "Tanah kering, hindari pupuk N cepat larut, prioritas pupuk K" } }),
+  toMongso({ id: 2, name: "Karo", periode: "2 – 24 Agt", startMonth: 8, startDay: 2, endMonth: 8, endDay: 24, durasi: 23, ideal: { ch: 25, suhu: 31, lembab: 62, angin: 22 }, toleransi: { ch: 30, suhu: 3, lembab: 10, angin: 10 }, karakteristik: "Kemarau, angin mulai berhembus, belalang muncul", tanaman: { rekomen: ["Singkong", "Tembakau", "Wijen"], hindari: ["Padi", "Sayuran daun"] }, kimiaTanah: { ph: "5.5–6.0", catatan: "Kandungan air tanah sangat rendah, irigasi tambahan diperlukan" } }),
+  toMongso({ id: 3, name: "Katelu", periode: "25 Agt – 17 Sep", startMonth: 8, startDay: 25, endMonth: 9, endDay: 17, durasi: 24, ideal: { ch: 40, suhu: 30, lembab: 65, angin: 18 }, toleransi: { ch: 50, suhu: 3, lembab: 12, angin: 10 }, karakteristik: "Peralihan kemarau–hujan, udara mulai lembab, ulat daun muncul", tanaman: { rekomen: ["Jagung", "Kacang tanah", "Singkong"], hindari: ["Padi sawah"] }, kimiaTanah: { ph: "5.8–6.2", catatan: "Mulai olah tanah, tambah bahan organik untuk persiapan musim tanam" } }),
+  toMongso({ id: 4, name: "Kapat", periode: "18 Sep – 12 Okt", startMonth: 9, startDay: 18, endMonth: 10, endDay: 12, durasi: 25, ideal: { ch: 80, suhu: 28, lembab: 72, angin: 15 }, toleransi: { ch: 80, suhu: 3, lembab: 12, angin: 10 }, karakteristik: "Awal hujan, kodok mulai berbunyi, tanah mulai basah", tanaman: { rekomen: ["Padi gogo", "Jagung", "Kacang tanah", "Kedelai"], hindari: ["Tembakau"] }, kimiaTanah: { ph: "6.0–6.5", catatan: "Waktu ideal pemupukan dasar, pH mulai optimal untuk padi" } }),
+  toMongso({ id: 5, name: "Kalima", periode: "13 Okt – 8 Nov", startMonth: 10, startDay: 13, endMonth: 11, endDay: 8, durasi: 27, ideal: { ch: 150, suhu: 27, lembab: 78, angin: 12 }, toleransi: { ch: 100, suhu: 4, lembab: 15, angin: 10 }, karakteristik: "Hujan rutin, burung migran datang, musim tanam utama padi", tanaman: { rekomen: ["Padi sawah", "Jagung", "Kacang tanah", "Cabai"], hindari: ["Tembakau", "Wijen"] }, kimiaTanah: { ph: "6.0–6.8", catatan: "Kondisi optimal untuk padi, pupuk urea dan TSP pada 2 MST" } }),
+  toMongso({ id: 6, name: "Kanem", periode: "9 Nov – 21 Des", startMonth: 11, startDay: 9, endMonth: 12, endDay: 21, durasi: 43, ideal: { ch: 250, suhu: 26, lembab: 83, angin: 10 }, toleransi: { ch: 150, suhu: 4, lembab: 15, angin: 10 }, karakteristik: "Puncak hujan awal, banyak hama wereng, ikan di sungai banyak", tanaman: { rekomen: ["Padi sawah", "Kangkung", "Bayam"], hindari: ["Kedelai", "Kacang tanah", "Cabai"] }, kimiaTanah: { ph: "5.8–6.5", catatan: "Leaching tinggi, tambah KCl dan pupuk P, waspada penyakit blast" } }),
+  toMongso({ id: 7, name: "Kapitu", periode: "22 Des – 3 Feb", startMonth: 12, startDay: 22, endMonth: 2, endDay: 3, durasi: 43, ideal: { ch: 300, suhu: 24, lembab: 85, angin: 15 }, toleransi: { ch: 150, suhu: 4, lembab: 15, angin: 10 }, karakteristik: "Puncak hujan, potensi banjir, petir sering, angin kencang", tanaman: { rekomen: ["Padi sawah (fase vegetatif)", "Kangkung air"], hindari: ["Semua tanaman kering", "Kedelai", "Jagung"] }, kimiaTanah: { ph: "5.5–6.2", catatan: "Leaching maksimal, pH turun, perlu pengapuran jika pH < 5.5" } }),
+  toMongso({ id: 8, name: "Kawolu", periode: "4 Feb – 1 Mar", startMonth: 2, startDay: 4, endMonth: 3, endDay: 1, durasi: 26, ideal: { ch: 200, suhu: 25, lembab: 82, angin: 13 }, toleransi: { ch: 120, suhu: 4, lembab: 15, angin: 10 }, karakteristik: "Hujan berkurang, bunga bermekaran, banyak kupu-kupu", tanaman: { rekomen: ["Padi sawah (fase generatif)", "Palawija", "Sayuran"], hindari: ["Tanaman rentan banjir"] }, kimiaTanah: { ph: "6.0–6.8", catatan: "Kondisi mulai stabil, pupuk K untuk pengisian bulir padi" } }),
+  toMongso({ id: 9, name: "Kasanga", periode: "2 – 26 Mar", startMonth: 3, startDay: 2, endMonth: 3, endDay: 26, durasi: 25, ideal: { ch: 120, suhu: 26, lembab: 78, angin: 20 }, toleransi: { ch: 80, suhu: 4, lembab: 12, angin: 12 }, karakteristik: "Angin kencang, musim bunga, banyak lebah, awal kemarau", tanaman: { rekomen: ["Jagung", "Kedelai", "Sayuran buah", "Semangka"], hindari: ["Padi sawah baru"] }, kimiaTanah: { ph: "6.0–6.8", catatan: "Kondisi ideal untuk palawija, pupuk NPK seimbang" } }),
+  toMongso({ id: 10, name: "Kasepuluh", periode: "27 Mar – 19 Apr", startMonth: 3, startDay: 27, endMonth: 4, endDay: 19, durasi: 24, ideal: { ch: 70, suhu: 28, lembab: 72, angin: 18 }, toleransi: { ch: 60, suhu: 3, lembab: 12, angin: 10 }, karakteristik: "Panas meningkat, buah-buahan masak, musim panen", tanaman: { rekomen: ["Kedelai", "Kacang tanah", "Melon", "Semangka"], hindari: ["Padi sawah", "Sayuran daun"] }, kimiaTanah: { ph: "6.0–7.0", catatan: "pH optimal untuk kedelai, inokulasi Rhizobium dianjurkan" } }),
+  toMongso({ id: 11, name: "Desta", periode: "20 Apr – 12 Mei", startMonth: 4, startDay: 20, endMonth: 5, endDay: 12, durasi: 23, ideal: { ch: 40, suhu: 30, lembab: 67, angin: 20 }, toleransi: { ch: 50, suhu: 3, lembab: 12, angin: 10 }, karakteristik: "Kemarau awal, banyak buah matang, burung pipit banyak", tanaman: { rekomen: ["Singkong", "Tembakau", "Kacang hijau"], hindari: ["Padi sawah", "Sayuran butuh air banyak"] }, kimiaTanah: { ph: "5.8–6.5", catatan: "Mulai kurangi frekuensi irigasi, perbanyak mulsa organik" } }),
+  toMongso({ id: 12, name: "Sada", periode: "13 Mei – 21 Jun", startMonth: 5, startDay: 13, endMonth: 6, endDay: 21, durasi: 41, ideal: { ch: 25, suhu: 31, lembab: 63, angin: 24 }, toleransi: { ch: 30, suhu: 3, lembab: 10, angin: 10 }, karakteristik: "Kemarau panjang, angin panas, daun ilalang mengering", tanaman: { rekomen: ["Singkong", "Tebu", "Tembakau", "Jati"], hindari: ["Semua tanaman butuh air tinggi"] }, kimiaTanah: { ph: "5.5–6.0", catatan: "Stres air tinggi, fokus tanaman C4 toleran kering, mulsa wajib" } }),
 ];
 
 export function getCurrentMongso(date: Date = new Date()): Mongso {
   const m = date.getMonth() + 1;
   const d = date.getDate();
-  const inRange = (mo: Mongso) => {
+  const cur = m * 100 + d;
+  return MONGSO_LIST.find((mo) => {
     const start = mo.startMonth * 100 + mo.startDay;
     const end = mo.endMonth * 100 + mo.endDay;
-    const cur = m * 100 + d;
-    if (start <= end) return cur >= start && cur <= end;
-    return cur >= start || cur <= end; // wraps year
-  };
-  return MONGSO_LIST.find(inRange) ?? MONGSO_LIST[0];
+    return start <= end ? cur >= start && cur <= end : cur >= start || cur <= end;
+  }) ?? MONGSO_LIST[0];
 }
 
-// Mock realistic weather + IKM per Mongso
-export type WeatherProfile = {
-  rainfall: number; // mm/period
-  temperature: number; // °C avg
-  humidity: number; // %
-  wind: number; // km/h
+export const DATABASE_MONGSO = MONGSO_LIST;
+
+export const PREDICTED_WEATHER: Record<number, WeatherProfile> = Object.fromEntries(
+  MONGSO_LIST.map((m) => [m.number, { rainfall: m.ideal.ch, temperature: m.ideal.suhu, humidity: m.ideal.lembab, wind: m.ideal.angin }]),
+) as Record<number, WeatherProfile>;
+
+export const ACTUAL_WEATHER: Record<number, WeatherProfile> = PREDICTED_WEATHER;
+
+export type IKMDetails = {
+  ikm: number;
+  skorCH: number;
+  skorSuhu: number;
+  skorLembab: number;
+  skorAngin: number;
 };
 
-export const PREDICTED_WEATHER: Record<number, WeatherProfile> = {
-  1: { rainfall: 30, temperature: 28, humidity: 70, wind: 12 },
-  2: { rainfall: 15, temperature: 29, humidity: 65, wind: 14 },
-  3: { rainfall: 10, temperature: 30, humidity: 60, wind: 16 },
-  4: { rainfall: 80, temperature: 28, humidity: 75, wind: 12 },
-  5: { rainfall: 180, temperature: 27, humidity: 82, wind: 18 },
-  6: { rainfall: 320, temperature: 26, humidity: 86, wind: 14 },
-  7: { rainfall: 380, temperature: 25, humidity: 88, wind: 12 },
-  8: { rainfall: 220, temperature: 26, humidity: 84, wind: 11 },
-  9: { rainfall: 150, temperature: 27, humidity: 80, wind: 12 },
-  10: { rainfall: 90, temperature: 28, humidity: 76, wind: 13 },
-  11: { rainfall: 50, temperature: 28, humidity: 72, wind: 14 },
-  12: { rainfall: 35, temperature: 27, humidity: 68, wind: 13 },
-};
+export function hitungSkor(aktual: number, ideal: number, toleransi: number) {
+  return Math.max(0, 100 - (Math.abs(aktual - ideal) / toleransi) * 100);
+}
 
-export const ACTUAL_WEATHER: Record<number, WeatherProfile> = {
-  1: { rainfall: 42, temperature: 28.5, humidity: 71, wind: 13 },
-  2: { rainfall: 22, temperature: 29.4, humidity: 64, wind: 15 },
-  3: { rainfall: 18, temperature: 30.2, humidity: 62, wind: 17 },
-  4: { rainfall: 65, temperature: 28.7, humidity: 73, wind: 13 },
-  5: { rainfall: 165, temperature: 27.3, humidity: 80, wind: 17 },
-  6: { rainfall: 290, temperature: 26.5, humidity: 84, wind: 15 },
-  7: { rainfall: 410, temperature: 25.2, humidity: 89, wind: 13 },
-  8: { rainfall: 240, temperature: 26.4, humidity: 85, wind: 12 },
-  9: { rainfall: 120, temperature: 27.5, humidity: 78, wind: 13 },
-  10: { rainfall: 75, temperature: 28.4, humidity: 74, wind: 14 },
-  11: { rainfall: 38, temperature: 28.8, humidity: 70, wind: 15 },
-  12: { rainfall: 28, temperature: 27.6, humidity: 67, wind: 14 },
-};
+export function hitungIKM(dataBMKG: { curahHujan: number; suhu: number; kelembaban: number; angin: number }, idealMongso: { ideal: IdealMongso; toleransi: ToleransiMongso }): IKMDetails {
+  const skorCH = hitungSkor(dataBMKG.curahHujan, idealMongso.ideal.ch, idealMongso.toleransi.ch);
+  const skorSuhu = hitungSkor(dataBMKG.suhu, idealMongso.ideal.suhu, idealMongso.toleransi.suhu);
+  const skorLembab = hitungSkor(dataBMKG.kelembaban, idealMongso.ideal.lembab, idealMongso.toleransi.lembab);
+  const skorAngin = hitungSkor(dataBMKG.angin, idealMongso.ideal.angin, idealMongso.toleransi.angin);
+  const ikm = (0.4 * skorCH) + (0.3 * skorSuhu) + (0.2 * skorLembab) + (0.1 * skorAngin);
+  return { ikm, skorCH, skorSuhu, skorLembab, skorAngin };
+}
 
-const score = (actual: number, predicted: number) => {
-  const diff = Math.abs(actual - predicted);
-  const ratio = diff / Math.max(predicted, 1);
-  return Math.max(0, Math.min(100, 100 - ratio * 100));
-};
+export function calculateIKMDetails(predicted: WeatherProfile, actual: WeatherProfile, mongso?: Mongso): IKMDetails {
+  const basis = mongso ?? MONGSO_LIST.find((m) => m.ideal.ch === predicted.rainfall) ?? MONGSO_LIST[0];
+  const details = hitungIKM(
+    { curahHujan: actual.rainfall, suhu: actual.temperature, kelembaban: actual.humidity, angin: actual.wind },
+    basis,
+  );
+  return {
+    ikm: Math.round(details.ikm),
+    skorCH: Math.round(details.skorCH),
+    skorSuhu: Math.round(details.skorSuhu),
+    skorLembab: Math.round(details.skorLembab),
+    skorAngin: Math.round(details.skorAngin),
+  };
+}
 
-export function calculateIKM(predicted: WeatherProfile, actual: WeatherProfile): number {
-  const r = score(actual.rainfall, predicted.rainfall);
-  const t = score(actual.temperature, predicted.temperature);
-  const h = score(actual.humidity, predicted.humidity);
-  const w = score(actual.wind, predicted.wind);
-  return Math.round(0.4 * r + 0.3 * t + 0.2 * h + 0.1 * w);
+export function calculateIKM(predicted: WeatherProfile, actual: WeatherProfile, mongso?: Mongso): number {
+  return calculateIKMDetails(predicted, actual, mongso).ikm;
 }
 
 export function getIKMCategory(score: number) {
@@ -99,8 +142,4 @@ export function getIKMCategory(score: number) {
   return { label: "Tidak Sesuai", color: "var(--alert)", bg: "oklch(0.65 0.22 30 / 0.15)" };
 }
 
-export const PROVINCES = [
-  "DI Yogyakarta", "Jawa Tengah", "Jawa Timur", "Jawa Barat", "Banten",
-  "DKI Jakarta", "Bali", "Lampung", "Sumatera Selatan", "Sumatera Utara",
-  "Sulawesi Selatan", "Nusa Tenggara Barat", "Nusa Tenggara Timur",
-];
+export const PROVINCES = ["Yogyakarta", "Klaten", "Sleman", "Bantul", "Surakarta", "Magelang", "Wonosari", "Wates"];
