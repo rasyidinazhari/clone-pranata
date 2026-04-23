@@ -11,8 +11,8 @@ const links = [
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <header className="lg:sticky lg:top-0 lg:z-50 lg:backdrop-blur-md lg:bg-background/80 lg:border-b lg:border-border">
+      <div className="hidden max-w-7xl mx-auto px-4 sm:px-6 h-16 lg:flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 group">
           <div className="w-9 h-9 rounded-xl bg-gradient-hero flex items-center justify-center shadow-soft group-hover:scale-105 transition-transform">
             <Sprout className="w-5 h-5 text-primary-foreground" strokeWidth={2.5} />
@@ -22,7 +22,7 @@ export function Header() {
             <div className="text-[10px] text-muted-foreground -mt-0.5 hidden sm:block">Kearifan Lokal × Sains</div>
           </div>
         </Link>
-        <nav className="hidden lg:flex items-center gap-1 overflow-x-auto">
+        <nav className="flex items-center gap-1 overflow-x-auto">
           {links.map((l) => (
             <Link
               key={l.to}
