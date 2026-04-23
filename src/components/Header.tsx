@@ -1,12 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import { Sprout } from "lucide-react";
+import { BarChart3, Clock3, Home, Info, Leaf, Sprout } from "lucide-react";
 
 const links = [
-  { to: "/", label: "Beranda" },
-  { to: "/dashboard", label: "Dashboard" },
-  { to: "/rekomendasi", label: "Rekomendasi" },
-  { to: "/historis", label: "Historis" },
-  { to: "/tentang", label: "Tentang" },
+  { to: "/", label: "Beranda", icon: Home },
+  { to: "/dashboard", label: "Dashboard", icon: BarChart3 },
+  { to: "/rekomendasi", label: "Rekomendasi", icon: Leaf },
+  { to: "/historis", label: "Historis", icon: Clock3 },
+  { to: "/tentang", label: "Tentang", icon: Info },
 ] as const;
 
 export function Header() {
@@ -22,7 +22,7 @@ export function Header() {
             <div className="text-[10px] text-muted-foreground -mt-0.5 hidden sm:block">Kearifan Lokal × Sains</div>
           </div>
         </Link>
-        <nav className="flex items-center gap-1 overflow-x-auto">
+        <nav className="hidden lg:flex items-center gap-1 overflow-x-auto">
           {links.map((l) => (
             <Link
               key={l.to}
@@ -35,6 +35,24 @@ export function Header() {
           ))}
         </nav>
       </div>
+      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 px-2 pb-[calc(env(safe-area-inset-bottom)+0.35rem)] pt-1.5 shadow-elevated backdrop-blur-md lg:hidden">
+        <div className="mx-auto grid max-w-md grid-cols-5 gap-1">
+          {links.map((l) => {
+            const Icon = l.icon;
+            return (
+              <Link
+                key={l.to}
+                to={l.to}
+                activeOptions={{ exact: l.to === "/" }}
+                className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[10px] font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-primary data-[status=active]:bg-secondary data-[status=active]:text-primary"
+              >
+                <Icon className="h-5 w-5" strokeWidth={2.25} />
+                <span className="max-w-full truncate leading-none">{l.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
     </header>
   );
 }
