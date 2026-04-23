@@ -35,7 +35,7 @@ export function Header() {
           ))}
         </nav>
       </div>
-      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 px-2 pb-[calc(env(safe-area-inset-bottom)+0.35rem)] pt-1.5 shadow-elevated backdrop-blur-md lg:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 px-2 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 shadow-elevated backdrop-blur-md lg:hidden">
         <div className="mx-auto grid max-w-md grid-cols-5 gap-1">
           {links.map((l) => {
             const Icon = l.icon;
@@ -44,7 +44,7 @@ export function Header() {
                 key={l.to}
                 to={l.to}
                 activeOptions={{ exact: l.to === "/" }}
-                className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[10px] font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-primary data-[status=active]:bg-secondary data-[status=active]:text-primary"
+                className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-lg px-1 text-[10px] font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-primary data-[status=active]:bg-secondary data-[status=active]:text-primary"
               >
                 <Icon className="h-5 w-5" strokeWidth={2.25} />
                 <span className="max-w-full truncate leading-none">{l.label}</span>
