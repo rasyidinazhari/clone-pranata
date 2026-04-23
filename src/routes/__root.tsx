@@ -51,7 +51,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <div className="min-h-screen flex flex-col pb-20 lg:pb-0">
+    <div className="min-h-screen flex flex-col pb-24 lg:pb-0">
       <Header />
       <main className="flex-1"><Outlet /></main>
       <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
