@@ -37,7 +37,7 @@ function HomePage() {
             <span style={{ color: "var(--leaf)" }}>Divalidasi Sains</span>
           </h1>
           <p className="mt-6 text-lg sm:text-xl text-primary-foreground/85 max-w-2xl text-balance">
-            Sistem validasi ilmiah kalender tani Pranata Mongso dengan data cuaca real-time. Membantu petani Indonesia memutuskan kapan menanam dengan presisi.
+            Sistem validasi ilmiah kalender tani Pranata Mongso dengan data simulasi historis BMKG. Membantu petani Indonesia memutuskan kapan menanam dengan presisi.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <Link to="/rekomendasi" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-accent-foreground font-semibold hover:opacity-90 transition shadow-elevated">
@@ -61,7 +61,7 @@ function HomePage() {
               <MapPin className="w-4 h-4" />
               <h3 className="font-semibold">Lokasi Anda</h3>
             </div>
-            <p className="text-sm text-muted-foreground mt-1">Pilih kota untuk data cuaca BMKG real-time.</p>
+            <p className="text-sm text-muted-foreground mt-1">Pilih kota untuk data simulasi historis BMKG.</p>
             <select
               value={cityId}
               onChange={(e) => setCityId(e.target.value)}
@@ -84,7 +84,7 @@ function HomePage() {
         <div className="grid sm:grid-cols-3 gap-4 mt-10">
           {[
             { t: "12 Mongso Terdeteksi", d: "Deteksi otomatis berdasarkan tanggal hari ini.", e: "📅" },
-            { t: "IKM Score Real-time", d: "Indeks Kesesuaian Mongso berbasis 4 parameter cuaca.", e: "📊" },
+            { t: "IKM Score Ilmiah", d: "Indeks Kesesuaian Mongso berbasis 4 parameter cuaca.", e: "📊" },
             { t: "Rekomendasi Tanam", d: "Tanaman tepat untuk mongso & lokasi Anda.", e: "🌱" },
           ].map((f) => (
             <div key={f.t} className="rounded-xl bg-card border border-border p-5 hover:shadow-soft transition">
