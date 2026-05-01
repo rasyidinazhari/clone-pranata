@@ -4,7 +4,8 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "build": "NITRO_PRESET=vercel vinxi build",
+    "dev": "vinxi dev",
+    "build": "vinxi build",
     "start": "vinxi start"
   },
   "dependencies": {
@@ -78,6 +79,7 @@
     "prettier": "^3.7.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
+    "vinxi": "^0.5.11",
     "vite": "^7.3.1",
     "vite-tsconfig-paths": "^6.1.1"
   }
