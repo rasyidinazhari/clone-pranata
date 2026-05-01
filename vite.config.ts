@@ -1,10 +1,10 @@
 import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
-import tsconfigPaths from "vite-tsconfig-paths"; // Tambahkan ini
+import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [
-    tsconfigPaths(), // Letakkan di atas tanstackStart
-    tanstackStart(),
+    tsconfigPaths(),
+    tanstackStart(), // Biarkan kosong, atau hanya isi {}
   ],
 });
