@@ -1,6 +1,6 @@
 # Deploy ke Vercel
 
-Project ini adalah **TanStack Start** (full-stack React dengan SSR). Default-nya di-build untuk Cloudflare Workers (lihat `wrangler.jsonc`). Untuk deploy ke Vercel, ikuti langkah berikut.
+Project ini adalah **TanStack Start** (full-stack React dengan SSR). Untuk deploy ke Vercel, gunakan integrasi **Nitro** sesuai dokumentasi Vercel untuk TanStack Start.
 
 > ⚠️ **Rekomendasi**: Cara paling mudah & gratis adalah pakai tombol **Publish** di Lovable (sudah teroptimasi untuk TanStack Start, custom domain didukung). Vercel butuh konfigurasi tambahan di bawah.
 
@@ -16,39 +16,46 @@ Tanpa konfigurasi, Vercel hanya melayani `index.html` build statis → semua rou
 
 ---
 
-## Langkah 1 — Tambah preset Vercel di `vite.config.ts`
+## Langkah 1 — Gunakan `tanstackStart()` + `nitro()` di `vite.config.ts`
 
-Override target Lovable preset (default: `cloudflare-module`) ke `vercel`:
+Vercel saat ini merekomendasikan TanStack Start dipasangkan dengan Nitro:
 
 ```ts
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import react from "@vitejs/plugin-react";
+import { nitro } from "nitro/vite";
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  tanstackStart: {
-    target: "vercel",
-  },
+  plugins: [tanstackStart(), nitro(), react()],
 });
 ```
 
-Setelah build (`vite build`), output akan masuk ke folder `.vercel/output/` dengan format Vercel Build Output API v3 — siap di-deploy.
+Jangan andalkan `.output/`. Pada setup ini, Vercel akan memakai output Nitro/TanStack yang cocok untuk SSR.
 
 ---
 
-## Langkah 2 — Tambah `vercel.json` di root project
+## Langkah 2 — Install dependency Nitro
 
-```json
-{
-  "buildCommand": "vite build",
-  "framework": null,
-  "outputDirectory": ".vercel/output"
-}
+```bash
+npm install
 ```
 
-`framework: null` mencegah Vercel auto-detect sebagai Vite SPA. `outputDirectory` mengarahkan ke build output TanStack Start.
+Pastikan package `nitro` ikut ter-install dari `package.json`.
 
 ---
 
-## Langkah 3 — Set Environment Variables di Vercel
+## Langkah 3 — Set Build Settings di Vercel
+
+- Build Command: `npm run build`
+- Install Command: `npm install`
+- Framework Preset: `Other`
+
+Jangan isi Output Directory ke `.output`. Jangan pakai `.vercel/output` kecuali build lokal benar-benar menghasilkan folder itu.
+
+---
+
+## Langkah 4 — Set Environment Variables di Vercel
 
 Di **Vercel Dashboard → Project → Settings → Environment Variables**, tambahkan semua variable yang dipakai project (Lovable Cloud / Supabase / dll):
 
@@ -62,31 +69,17 @@ Di **Vercel Dashboard → Project → Settings → Environment Variables**, tamb
 
 ---
 
-## Langkah 4 — Push ke GitHub & Connect ke Vercel
+## Langkah 5 — Push ke GitHub & Connect ke Vercel
 
-1. Pastikan perubahan di atas (`vite.config.ts` + `vercel.json`) sudah ter-commit ke GitHub.
+1. Pastikan perubahan di atas sudah ter-commit ke GitHub.
 2. Di Vercel: **Add New Project → Import Git Repository → pilih repo**.
-3. Vercel akan auto-detect `vercel.json`, tidak perlu ubah build settings.
-4. Klik **Deploy**.
+3. Klik **Deploy**.
 
 ---
 
 ## Troubleshooting
 
-- **Masih 404 setelah konfigurasi**: pastikan `outputDirectory` di `vercel.json` cocok dengan output `vite build` (cek isi folder `.vercel/output/` lokal setelah build).
-- **Build gagal "Cannot find preset 'vercel'"**: update `@tanstack/react-start` ke versi terbaru (`bun add @tanstack/react-start@latest`).
+- **Masih 404 setelah deploy**: biasanya berarti Vercel masih memperlakukan hasil build sebagai static site, bukan SSR function. Pastikan `nitro` sudah ter-install dan `vite.config.ts` benar-benar memakai `nitro()`.
+- **Build gagal karena `nitro` tidak ditemukan**: jalankan install dependency lagi lalu redeploy.
 - **Function timeout / 500**: cek **Vercel → Project → Logs** untuk error runtime dari server function.
 - **Lovable Cloud (Supabase) tidak connect**: pastikan env vars `VITE_SUPABASE_*` sudah di-set di Vercel dan **redeploy** setelah menambah env.
-
----
-
-## Alternatif: tetap pakai Cloudflare Workers
-
-Jika tidak butuh Vercel spesifik, hapus perubahan di atas dan deploy via Wrangler CLI:
-
-```bash
-bun run build
-bunx wrangler deploy
-```
-
-Konfigurasi Cloudflare sudah ada di `wrangler.jsonc`.
