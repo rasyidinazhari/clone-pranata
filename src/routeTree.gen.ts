@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TentangRouteImport } from './routes/tentang'
+import { Route as RouteCheckRouteImport } from './routes/route-check'
 import { Route as RekomendasiRouteImport } from './routes/rekomendasi'
 import { Route as HistorisRouteImport } from './routes/historis'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -18,6 +19,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const TentangRoute = TentangRouteImport.update({
   id: '/tentang',
   path: '/tentang',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RouteCheckRoute = RouteCheckRouteImport.update({
+  id: '/route-check',
+  path: '/route-check',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RekomendasiRoute = RekomendasiRouteImport.update({
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/historis': typeof HistorisRoute
   '/rekomendasi': typeof RekomendasiRoute
+  '/route-check': typeof RouteCheckRoute
   '/tentang': typeof TentangRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/historis': typeof HistorisRoute
   '/rekomendasi': typeof RekomendasiRoute
+  '/route-check': typeof RouteCheckRoute
   '/tentang': typeof TentangRoute
 }
 export interface FileRoutesById {
@@ -61,19 +69,33 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/historis': typeof HistorisRoute
   '/rekomendasi': typeof RekomendasiRoute
+  '/route-check': typeof RouteCheckRoute
   '/tentang': typeof TentangRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/historis' | '/rekomendasi' | '/tentang'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/historis'
+    | '/rekomendasi'
+    | '/route-check'
+    | '/tentang'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/historis' | '/rekomendasi' | '/tentang'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/historis'
+    | '/rekomendasi'
+    | '/route-check'
+    | '/tentang'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
     | '/historis'
     | '/rekomendasi'
+    | '/route-check'
     | '/tentang'
   fileRoutesById: FileRoutesById
 }
@@ -82,6 +104,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   HistorisRoute: typeof HistorisRoute
   RekomendasiRoute: typeof RekomendasiRoute
+  RouteCheckRoute: typeof RouteCheckRoute
   TentangRoute: typeof TentangRoute
 }
 
@@ -92,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/tentang'
       fullPath: '/tentang'
       preLoaderRoute: typeof TentangRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/route-check': {
+      id: '/route-check'
+      path: '/route-check'
+      fullPath: '/route-check'
+      preLoaderRoute: typeof RouteCheckRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/rekomendasi': {
@@ -130,6 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   HistorisRoute: HistorisRoute,
   RekomendasiRoute: RekomendasiRoute,
+  RouteCheckRoute: RouteCheckRoute,
   TentangRoute: TentangRoute,
 }
 export const routeTree = rootRouteImport
