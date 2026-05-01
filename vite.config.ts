@@ -3,8 +3,5 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [
-    tsconfigPaths(),
-    tanstackStart(), // Biarkan kosong, atau hanya isi {}
-  ],
+  plugins: [tsconfigPaths(), tanstackStart()],
 });
