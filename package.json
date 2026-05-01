@@ -4,13 +4,8 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
-    "build:dev": "vite build --mode development",
-    "postbuild": "cp -r dist .output || echo 'Done'",
-    "preview": "vite preview",
-    "lint": "eslint .",
-    "format": "prettier --write ."
+    "build": "NITRO_PRESET=vercel vinxi build",
+    "start": "vinxi start"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
