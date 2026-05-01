@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { CheckCircle2, XCircle, Loader2, RefreshCw, ExternalLink } from "lucide-react";
-import { checkAllRoutes } from "@/server/routeCheck.functions";
-import type { RouteCheckResult } from "../server/routeCheck.functions";
+import { checkAllRoutes } from "@/lib/routeCheck.functions";
+import type { RouteCheckResult } from "@/lib/routeCheck.functions";
 
 export const Route = createFileRoute("/route-check")({
   head: () => ({

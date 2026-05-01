@@ -1,8 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
-
-import type { RouteCheckResult } from "../server/routeCheck.functions";
+export type { RouteCheckResult } from "../server/routeCheck.server";
 
 export const checkAllRoutes = createServerFn({ method: "GET" }).handler(async () => {
-  const { runRouteCheck } = await import("./routeCheck.server");
+  const { runRouteCheck } = await import("../server/routeCheck.server");
   return runRouteCheck();
 });
