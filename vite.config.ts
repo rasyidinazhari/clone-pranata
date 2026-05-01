@@ -1,13 +1,10 @@
-// vite.config.ts
-import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { defineConfig } from "vite";
-import { nitro } from "nitro/vite"; // Pastikan ini ada
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import tsconfigPaths from "vite-tsconfig-paths"; // Tambahkan ini
 
 export default defineConfig({
   plugins: [
+    tsconfigPaths(), // Letakkan di atas tanstackStart
     tanstackStart(),
-    nitro({
-      preset: "vercel", // Paksa preset ke vercel
-    }),
   ],
 });
