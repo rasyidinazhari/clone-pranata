@@ -6,4 +6,13 @@
 // You can pass additional config via defineConfig({ vite: { ... } }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
+// To deploy to Vercel instead of Cloudflare Workers, uncomment the block below.
+// See DEPLOY_VERCEL.md for the full guide.
+//
+// export default defineConfig({
+//   tanstackStart: {
+//     target: "vercel",
+//   },
+// });
+
 export default defineConfig();
