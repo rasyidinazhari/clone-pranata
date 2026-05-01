@@ -12,8 +12,9 @@ const ROUTES = ["/", "/dashboard", "/rekomendasi", "/historis", "/tentang"];
 
 export const checkAllRoutes = createServerFn({ method: "GET" })
   .handler(async (): Promise<{ checkedAt: string; baseUrl: string; results: RouteCheckResult[] }> => {
-    const { getRequestURL } = await import("@tanstack/react-start/server");
-    const reqUrl = getRequestURL();
+    const { getRequest } = await import("@tanstack/react-start/server");
+    const req = getRequest();
+    const reqUrl = new URL(req.url);
     const baseUrl = `${reqUrl.protocol}//${reqUrl.host}`;
 
     const results = await Promise.all(
