@@ -1,5 +1,0 @@
-{
-  "buildCommand": "vite build",
-  "framework": null,
-  "outputDirectory": ".output"
-}
